@@ -28,4 +28,5 @@ def loginCheck(loginInfo, db):
         return "User doesn't exist"
     if checkUser.password == loginInfo.password:
         return "Login Successful. AuthToken : {}".format(getAccessToken())
-    
+    else:
+        return "Wrong password"

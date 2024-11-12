@@ -62,7 +62,7 @@ async def signupOperation(request: Request, db : Session = Depends(get_db), user
 
 
 @app.post("/api/login")
-async def loginCheck(loginInfo:InSchema.LoginCheckData, request : Request):
+async def loginCheck(loginInfo:InSchema.LoginCheckData, request : Request, db: Session = Depends(get_db)):
     return API_HANDLER.loginCheck(loginInfo, db)
 
 @app.post("/api/signup")
