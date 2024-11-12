@@ -1,11 +1,13 @@
 from pydantic import BaseModel
+from fastapi import Form
 
 
-class RegistrationInput(BaseModel):
+class LoginCheckData(BaseModel):
     username : str
     password : str
-    email : str | None = "example@gmail.com"
-
-class LoginInfoInput(BaseModel):
+    
+class SignupData(BaseModel):
     username : str
     password : str
+    email : str
+    accessToken : str | None = None
