@@ -27,6 +27,12 @@ def loginCheck(loginInfo, db):
     if checkUser is None:
         return "User doesn't exist"
     if checkUser.password == loginInfo.password:
-        return "Login Successful. AuthToken : {}".format(getAccessToken())
+        checkUser.accessToken = getAccessToken()
+        try:
+            db.commit()
+            return f"{checkUser.accessToken}"
+        except Exception as error:
+            return str(error)
     else:
         return "Wrong password"
+    

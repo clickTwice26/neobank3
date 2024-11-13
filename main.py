@@ -12,8 +12,16 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import nb.handler as HANDLER
 from nb.forms import SignupForm
+from starlette.middleware import Middleware
+from starlette.middleware.sessions import SessionMiddleware
 import nb.apihandler as API_HANDLER
-app = FastAPI()
+from nb.handler import flash, get_flashed_messages, verify
+import typing
+
+middleware = [
+ Middleware(SessionMiddleware, secret_key="asdasd")
+]
+app = FastAPI(middleware=middleware)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -24,6 +32,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./database/neobank3.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
@@ -38,11 +47,14 @@ def get_db():
         db.close()
 
 @app.get("/")
-async def index(request: Request):
-    return HANDLER.indexViewer(request)
-#, db: Session = Depends(get_db)
+async def index(request: Request, db : Session = Depends(get_db) ):
+    if verify(request, db):
+        return HANDLER.indexViewer(request)
+    else:
+        return "You are not logged in"
 @app.get("/login")
 async def loginPage(request : Request):
+    flash(request, "hello", "success")
     return HANDLER.loginViewer(request)
 @app.get("/signup")
 async def signupPage(request : Request):
@@ -51,8 +63,9 @@ async def signupPage(request : Request):
 
 
 @app.post("/login/check")
-async def loginCheck(request : Request, db : Session = Depends(get_db)):
-    return HANDLER.loginChecker()
+async def loginCheck(request : Request, db : Session = Depends(get_db), username : str = Form(...), password : str = Form(...)):
+    loginInfo = InSchema.LoginCheckData(username = username, password = password)
+    return HANDLER.loginChecker(request, loginInfo, db)
 
 
 @app.post("/signup/check")

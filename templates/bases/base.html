@@ -15,7 +15,7 @@
 <body>
 
     {% include 'components/navbar.html' %}
-
+    {%include 'components/flash.html' %}
 
     {% block content %}
         <div class="text-center py-12">
@@ -23,7 +23,7 @@
         </div>
     {% endblock %}
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    {% include 'bases/scripts.html' %}
 
 </body>
 </html>

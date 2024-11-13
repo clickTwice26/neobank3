@@ -1,0 +1,12 @@
+{% for message in get_flashed_messages(request) %}
+<div 
+  role="alert" 
+  class="alert alert-{{ message.category }} p-2 sm:p-4 md:p-6 text-sm sm:text-base md:text-lg lg:text-xl"
+>
+ {% if message.category == 'success' %}
+ <i class="fa-solid fa-circle-check"></i>
+ {% elif message.category == "error" %}
+ {%endif %}
+  <span>{{ message.message }}</span>
+</div>
+{% endfor %}
