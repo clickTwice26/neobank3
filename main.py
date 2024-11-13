@@ -82,3 +82,6 @@ async def loginCheck(loginInfo:InSchema.LoginCheckData, request : Request, db: S
 async def API_signup(signupInfo : InSchema.SignupData, db : Session = Depends(get_db)):
     return API_HANDLER.signupOperation(signupInfo, db)
 
+@app.get("/dev")
+async def developer(request: Request, db : Session = Depends(get_db)):
+    return HANDLER.Developer(request, db)

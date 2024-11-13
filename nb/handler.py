@@ -80,6 +80,9 @@ def verify(request, db): # Not HANDLER
                 return False
     except Exception as error:
         return False
+def Developer(request, db):
+    userlist = db.query(User).filter().all()
+    return templates.TemplateResponse("test.html", {"request" : request, "userlist": userlist})
 class Userinfo:
     def __init__(self, username, db):
         self.userData = db.query(User).filter(User.username == username).first()
